@@ -1,0 +1,148 @@
+*, html, body {
+  margin: 0;
+  padding: 0;
+  outline: none;
+  font-family: 'Press Start 2P', sans-serif;
+}
+
+body {
+  background: #222;
+}
+
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+.webgl {
+  background-color: black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#links {
+  width: 100%;
+  overflow: hidden;
+}
+
+@keyframes slide-left {
+  from {
+    left: 50%;
+    width: 300%; 
+  }
+
+  to {
+    left: 10%;
+    width: 100%;
+  }
+}
+
+@keyframes slide-in-anim {
+	20% {
+		opacity: 0;
+	}
+	60% {
+		transform: translateX(10%); /*45*/
+	}
+	75% {
+		transform: translateX(10%); /*52*/
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(10%); /*50*/
+	}
+}
+
+.about_me {
+  position: absolute;
+  z-index: 2;
+  font-size: 2rem;
+  text-align: center;
+  font-size: 32px;
+  top: 40%;
+  left: 10%;
+	transform: translateX(300%);
+  background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow_animation 5s ease-in-out infinite, slide-in-anim 4s ease-out forwards;
+  background-size: 400% 100%;
+}
+
+.experience {
+  position: absolute;
+  z-index: 2;
+  font-size: 2rem;
+  text-align: center;
+  font-size: 32px;
+  top: 60%;
+  left: 10%;
+  background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow_animation 5s ease-in-out infinite, slide-left 2s;
+  background-size: 400% 100%;
+}
+
+#shadowBox {
+  background-color: rgb(0, 0, 0);
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.2);
+  /* Black w/opacity/see-through */
+  border: 3px solid;
+}
+
+.wave {
+  color: white;
+  animation-name: wave-animation;  /* Refers to the name of your @keyframes element below */
+  animation-duration: 2.5s;        /* Change to speed up or slow down */
+  animation-iteration-count: infinite;  /* Never stop waving :) */
+  transform-origin: 70% 70%;       /* Pivot around the bottom-left palm */
+  display: inline-block;
+}
+
+.rainbow {
+  z-index: 2;
+  position: absolute;
+  font-size: 2rem;
+  text-align: center;
+  font-size: 32px;
+  top: 10%;
+  left: 25%;
+}
+.rainbow_text_animated {
+  background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: rainbow_animation 5s ease-in-out infinite;
+  background-size: 400% 100%;
+}
+
+@keyframes rainbow_animation {
+  0%,100% {
+      background-position: 0 0;
+  }
+
+  50% {
+      background-position: 100% 0;
+  }
+}
+
+@keyframes wave-animation {
+  0% { transform: rotate( 0.0deg) }
+ 10% { transform: rotate(14.0deg) }  /* The following five values can be played with to make the waving more or less extreme */
+ 20% { transform: rotate(-8.0deg) }
+ 30% { transform: rotate(14.0deg) }
+ 40% { transform: rotate(-4.0deg) }
+ 50% { transform: rotate(10.0deg) }
+ 60% { transform: rotate( 0.0deg) }  /* Reset for the last half to pause */
+100% { transform: rotate( 0.0deg) }
+}
