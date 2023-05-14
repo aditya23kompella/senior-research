@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import { STLLoader } from 'three/examples/jsm/loaders/STLLoader'
+//munda
 
 const canvas = document.querySelector(".webgl")
 const scene = new THREE.Scene() 
