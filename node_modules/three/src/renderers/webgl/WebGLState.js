@@ -307,7 +307,7 @@ function WebGLState( gl, extensions, capabilities ) {
 	const stencilBuffer = new StencilBuffer();
 
 	const uboBindings = new WeakMap();
-	const uboProgamMap = new WeakMap();
+	const uboProgramMap = new WeakMap();
 
 	let enabledCapabilities = {};
 
@@ -362,7 +362,7 @@ function WebGLState( gl, extensions, capabilities ) {
 	const currentScissor = new Vector4().fromArray( scissorParam );
 	const currentViewport = new Vector4().fromArray( viewportParam );
 
-	function createTexture( type, target, count ) {
+	function createTexture( type, target, count, dimensions ) {
 
 		const data = new Uint8Array( 4 ); // 4 is required to match default unpack alignment of 4.
 		const texture = gl.createTexture();
@@ -373,7 +373,15 @@ function WebGLState( gl, extensions, capabilities ) {
 
 		for ( let i = 0; i < count; i ++ ) {
 
-			gl.texImage2D( target + i, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, data );
+			if ( isWebGL2 && ( type === gl.TEXTURE_3D || type === gl.TEXTURE_2D_ARRAY ) ) {
+
+				gl.texImage3D( target, 0, gl.RGBA, 1, 1, dimensions, 0, gl.RGBA, gl.UNSIGNED_BYTE, data );
+
+			} else {
+
+				gl.texImage2D( target + i, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, data );
+
+			}
 
 		}
 
@@ -384,6 +392,13 @@ function WebGLState( gl, extensions, capabilities ) {
 	const emptyTextures = {};
 	emptyTextures[ gl.TEXTURE_2D ] = createTexture( gl.TEXTURE_2D, gl.TEXTURE_2D, 1 );
 	emptyTextures[ gl.TEXTURE_CUBE_MAP ] = createTexture( gl.TEXTURE_CUBE_MAP, gl.TEXTURE_CUBE_MAP_POSITIVE_X, 6 );
+
+	if ( isWebGL2 ) {
+
+		emptyTextures[ gl.TEXTURE_2D_ARRAY ] = createTexture( gl.TEXTURE_2D_ARRAY, gl.TEXTURE_2D_ARRAY, 1, 1 );
+		emptyTextures[ gl.TEXTURE_3D ] = createTexture( gl.TEXTURE_3D, gl.TEXTURE_3D, 1, 1 );
+
+	}
 
 	// init
 
@@ -718,7 +733,7 @@ function WebGLState( gl, extensions, capabilities ) {
 		}
 
 		currentBlending = blending;
-		currentPremultipledAlpha = null;
+		currentPremultipledAlpha = false;
 
 	}
 
@@ -1104,13 +1119,13 @@ function WebGLState( gl, extensions, capabilities ) {
 
 	function updateUBOMapping( uniformsGroup, program ) {
 
-		let mapping = uboProgamMap.get( program );
+		let mapping = uboProgramMap.get( program );
 
 		if ( mapping === undefined ) {
 
 			mapping = new WeakMap();
 
-			uboProgamMap.set( program, mapping );
+			uboProgramMap.set( program, mapping );
 
 		}
 
@@ -1128,16 +1143,15 @@ function WebGLState( gl, extensions, capabilities ) {
 
 	function uniformBlockBinding( uniformsGroup, program ) {
 
-		const mapping = uboProgamMap.get( program );
+		const mapping = uboProgramMap.get( program );
 		const blockIndex = mapping.get( uniformsGroup );
 
-		if ( uboBindings.get( uniformsGroup ) !== blockIndex ) {
+		if ( uboBindings.get( program ) !== blockIndex ) {
 
 			// bind shader specific block index to global block point
-
 			gl.uniformBlockBinding( program, blockIndex, uniformsGroup.__bindingPointIndex );
 
-			uboBindings.set( uniformsGroup, blockIndex );
+			uboBindings.set( program, blockIndex );
 
 		}
 
